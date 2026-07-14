@@ -1,0 +1,136 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Prompt", sans-serif;
+  --font-display: "Fredoka", "Prompt", sans-serif;
+
+  --color-brand-pink: #FF007F;
+  --color-brand-pinklight: #FFF0F6;
+  --color-brand-purple: #4F46E5;
+  --color-brand-purplelight: #EEF2FF;
+  --color-brand-peach: #FF8E53;
+  --color-brand-peachlight: #FFF5F0;
+  --color-brand-slate: #1E293B;
+  --color-brand-teal: #0D9488;
+
+  --shadow-premium: 0 20px 50px -12px rgba(79,70,229,.12);
+  --shadow-glow: 0 10px 30px -5px rgba(255,0,127,.25);
+}
+
+body {
+  font-family: var(--font-sans);
+  background: linear-gradient(135deg, #FFF5F6 0%, #FAFAFF 40%, #F5FFF9 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: #1E293B;
+}
+
+.dreamer-card {
+  background: rgba(255,255,255,.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,.7);
+  box-shadow: 0 15px 35px -10px rgba(79,70,229,.06);
+}
+
+.dreamer-holo-border {
+  border: 2px solid transparent;
+  background-image: linear-gradient(rgba(255,255,255,.85),rgba(255,255,255,.85)), linear-gradient(135deg,#FF007F,#4F46E5,#FF8E53);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #FF007F 0%, #4F46E5 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.step-transition { transition: all .5s cubic-bezier(.4,0,.2,1); }
+
+.hero-vivid {
+  background: linear-gradient(120deg, #FF3D8A 0%, #8B5CF6 32%, #4F46E5 55%, #FF8E53 82%, #FFD166 100%);
+  position: relative;
+}
+.hero-vivid::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 25%,rgba(255,255,255,.35) 0%,transparent 45%),radial-gradient(circle at 85% 75%,rgba(255,255,255,.25) 0%,transparent 40%);
+}
+
+.hero-fade {
+  background: linear-gradient(180deg,rgba(255,255,255,0) 0%,rgba(255,255,255,0) 62%,rgba(250,250,255,1) 100%);
+}
+
+@keyframes popfoop {
+  0% { transform: scale(1); }
+  35% { transform: scale(1.08) rotate(1deg); }
+  60% { transform: scale(.96) rotate(-1deg); }
+  100% { transform: scale(1); }
+}
+.pie-pop { animation: popfoop .55s cubic-bezier(.34,1.56,.64,1); }
+
+@keyframes floaty {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+.floaty { animation: floaty 4s ease-in-out infinite; }
+
+@keyframes bounce-in {
+  0% { opacity: 0; transform: translateY(16px) scale(0.9); }
+  60% { transform: translateY(-4px) scale(1.03); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-bounce-in { animation: bounce-in 0.35s cubic-bezier(.34,1.56,.64,1) forwards; }
+
+.rank-1 { box-shadow: 0 0 0 2px #FF007F, 0 10px 25px -8px rgba(255,0,127,.35); }
+
+.pending-chip {
+  background: repeating-linear-gradient(45deg,#FFF7ED,#FFF7ED 6px,#FFEDD5 6px,#FFEDD5 12px);
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+
+.ticket-perforation {
+  position: relative;
+  height: 0;
+  border-top: 2px dashed #E2E8F0;
+  margin: 0 -1.25rem;
+}
+.ticket-perforation::before, .ticket-perforation::after {
+  content: '';
+  position: absolute;
+  top: -11px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #FAFAFF;
+  box-shadow: inset 0 0 0 1px rgba(226,232,240,.9);
+}
+.ticket-perforation::before { left: -11px; }
+.ticket-perforation::after { right: -11px; }
+
+.ticket-notch-card { position: relative; }
+.ticket-notch-card::before, .ticket-notch-card::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #FAFAFF;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+.ticket-notch-card::before { left: -10px; }
+.ticket-notch-card::after { right: -10px; }
+
+.stub-barcode {
+  background: repeating-linear-gradient(90deg,#1E293B 0px,#1E293B 2px,transparent 2px,transparent 4px,#1E293B 4px,#1E293B 5px,transparent 5px,transparent 9px);
+  height: 32px;
+  border-radius: 4px;
+  opacity: .85;
+}
