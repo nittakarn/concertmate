@@ -39,7 +39,7 @@ type ModalKey = "ticket" | "hotel" | "transit" | "checklist" | "policy" | null;
 const MODAL_TITLES: Record<Exclude<ModalKey, null>, string> = {
   ticket: "My Concert Ticket",
   hotel: "ที่พักแนะนำ",
-  transit: "Smart Route Timeline",
+  transit: "Route Timeline",
   checklist: "สิ่งที่ต้องเตรียม",
   policy: "กฎ & Policy สถานที่",
 };

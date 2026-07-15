@@ -208,7 +208,7 @@ export default function TransitSection({ concert, ticketZone, wantMerch = false 
     <div className="dreamer-card rounded-3xl p-6 space-y-6">
       <div className="flex justify-between items-center pb-3 border-b border-slate-100">
         <h4 className="font-bold text-lg text-[#1E293B] flex items-center gap-2" style={{ fontFamily: "Fredoka, Prompt, sans-serif" }}>
-          <i className="fa-solid fa-train text-xl"></i> Smart Route Timeline
+          <i className="fa-solid fa-train text-xl"></i> Route Timeline
         </h4>
         <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 font-bold text-[9px] uppercase tracking-wider">ไป-กลับฮอลล์</span>
       </div>
