@@ -1,13 +1,17 @@
 "use client";
-import type { WizardState } from "@/lib/types";
+import type { WizardState, TicketZone } from "@/lib/types";
 
 interface Props {
   state: WizardState;
   onChange: (partial: Partial<WizardState>) => void;
   haveTicket?: boolean;
+  ticketZone?: TicketZone;
 }
 
-export default function Step1Budget({ state, onChange, haveTicket }: Props) {
+export default function Step1Budget({ state, onChange, haveTicket, ticketZone }: Props) {
+  const ticketPrice = ticketZone?.price ?? 0;
+  const remaining = state.budget - ticketPrice;
+
   return (
     <div className="space-y-6">
       <div className="space-y-1.5">
@@ -16,7 +20,7 @@ export default function Step1Budget({ state, onChange, haveTicket }: Props) {
         </h3>
         <p className="text-xs text-slate-500">
           {haveTicket
-            ? "ตั้งงบรวมทั้งหมดสำหรับทริปนี้ (รวมค่าบัตรที่ซื้อไปแล้ว) เพื่อให้ระบบช่วยคุมยอดที่เหลือได้"
+            ? "ตั้งงบรวมทั้งหมดสำหรับทริปนี้ รวมค่าบัตรที่ซื้อไปแล้ว"
             : "ตั้งงบรวมทั้งหมดที่คุณมีสำหรับทริปนี้ รวมบัตร ที่พัก เดินทาง กิน และของที่ระลึก"}
         </p>
       </div>
@@ -57,12 +61,41 @@ export default function Step1Budget({ state, onChange, haveTicket }: Props) {
             </button>
           ))}
         </div>
-        <div className="p-3 bg-blue-50/60 rounded-xl border border-blue-100 text-[11px] text-slate-600">
-          <i className="fa-solid fa-lightbulb text-blue-400 mr-1.5"></i>
-          {haveTicket
-            ? "ระบบจะแสดงยอดคงเหลือหลังหักค่าบัตร ที่พัก เดินทาง กิน และของที่ระลึก ให้เห็นภาพรวมงบทั้งทริป"
-            : "ระบบจะใช้งบนี้คำนวณว่าเหลืองบซื้อบัตรได้เท่าไร หลังหักค่าที่พัก เดินทาง กิน และของที่ระลึกตามที่คุณตั้งในขั้นตอนถัดไป"}
-        </div>
+
+        {haveTicket && ticketZone && (
+          <div className="rounded-2xl border border-slate-100 overflow-hidden divide-y divide-slate-100">
+            <div className="flex justify-between items-center px-4 py-3 bg-slate-50">
+              <span className="text-xs text-slate-500 flex items-center gap-1.5">
+                <i className="fa-solid fa-ticket text-[#FF007F]"></i>
+                ราคาบัตร ({ticketZone.zone})
+              </span>
+              <span className="text-xs font-bold text-slate-700">฿{ticketPrice.toLocaleString()}</span>
+            </div>
+            <div className="flex justify-between items-center px-4 py-3 bg-white">
+              <span className="text-xs text-slate-500 flex items-center gap-1.5">
+                <i className="fa-solid fa-wallet text-[#4F46E5]"></i>
+                งบนอกเหนือค่าบัตร
+              </span>
+              <span className={`text-xs font-bold ${remaining >= 0 ? "text-emerald-600" : "text-red-500"}`}>
+                {remaining >= 0 ? `฿${remaining.toLocaleString()}` : `-฿${Math.abs(remaining).toLocaleString()}`}
+              </span>
+            </div>
+            <div className="flex justify-between items-center px-4 py-3 bg-[#FFF0F6]/30">
+              <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                <i className="fa-solid fa-circle-check text-[#FF007F]"></i>
+                งบรวมทั้งทริป
+              </span>
+              <span className="text-sm font-black text-[#FF007F]">฿{state.budget.toLocaleString()}</span>
+            </div>
+          </div>
+        )}
+
+        {!haveTicket && (
+          <div className="p-3 bg-blue-50/60 rounded-xl border border-blue-100 text-[11px] text-slate-600">
+            <i className="fa-solid fa-lightbulb text-blue-400 mr-1.5"></i>
+            ระบบจะใช้งบนี้คำนวณว่าเหลืองบซื้อบัตรได้เท่าไร หลังหักค่าที่พัก เดินทาง กิน และของที่ระลึกตามที่คุณตั้งในขั้นตอนถัดไป
+          </div>
+        )}
       </div>
     </div>
   );

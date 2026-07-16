@@ -7,6 +7,7 @@ import Step2Ticket from "./Step2Ticket";
 import Step3Hotel from "./Step3Hotel";
 import Step4Travel from "./Step4Travel";
 import StepZonePicker from "./StepZonePicker";
+import type { TicketZone } from "@/lib/types";
 
 interface WizardFlowProps {
   concert: Concert;
@@ -31,8 +32,8 @@ const PLAN_LABELS = [
 ];
 
 const HAVE_TICKET_LABELS = [
-  "สเต็ป 1 จาก 4 : งบรวมสำหรับทริปนี้",
-  "สเต็ป 2 จาก 4 : โซนบัตรที่มีแล้ว",
+  "สเต็ป 1 จาก 4 : โซนบัตรที่มีแล้ว",
+  "สเต็ป 2 จาก 4 : งบรวมสำหรับทริปนี้",
   "สเต็ป 3 จาก 4 : การจองที่พักนอน",
   "สเต็ป 4 จาก 4 : ค่าใช้จ่ายระหว่างทริป",
 ];
@@ -64,7 +65,8 @@ export default function WizardFlow({ concert, roundKey, mode = "plan", onBack, o
 
   const update = (partial: Partial<WizardState>) => setState((s) => ({ ...s, ...partial }));
 
-  const canNext = isHaveTicket && step === 2 ? !!state.preselectedZone : true;
+  const canNext = isHaveTicket && step === 1 ? !!state.preselectedZone : true;
+  const selectedZone: TicketZone | undefined = concert.prices.find((p) => p.zone === state.preselectedZone);
 
   const handleNext = () => {
     if (step < 4) setStep((s) => s + 1);
@@ -125,8 +127,8 @@ export default function WizardFlow({ concert, roundKey, mode = "plan", onBack, o
       <div className="dreamer-card rounded-3xl p-6 border border-white/60 space-y-6">
         {isHaveTicket ? (
           <>
-            {step === 1 && <Step1Budget state={state} onChange={update} haveTicket />}
-            {step === 2 && <StepZonePicker concert={concert} state={state} onChange={update} />}
+            {step === 1 && <StepZonePicker concert={concert} state={state} onChange={update} />}
+            {step === 2 && <Step1Budget state={state} onChange={update} haveTicket ticketZone={selectedZone} />}
             {step === 3 && <Step3Hotel state={state} onChange={update} />}
             {step === 4 && <Step4Travel state={state} onChange={update} />}
           </>
