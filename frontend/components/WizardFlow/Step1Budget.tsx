@@ -10,9 +10,6 @@ interface Props {
 
 export default function Step1Budget({ state, onChange, haveTicket, ticketZone }: Props) {
   const ticketPrice = ticketZone?.price ?? 0;
-
-  // in have-ticket mode: state.budget = total (ticket + other)
-  // nonTicketBudget = what user controls
   const nonTicketBudget = haveTicket && ticketZone ? Math.max(0, state.budget - ticketPrice) : state.budget;
   const totalBudget = haveTicket && ticketZone ? nonTicketBudget + ticketPrice : state.budget;
 
@@ -20,12 +17,13 @@ export default function Step1Budget({ state, onChange, haveTicket, ticketZone }:
     onChange({ budget: val + ticketPrice });
   };
 
+  const zoneName = ticketZone?.zone.split("(")[0].trim() ?? "";
+
   return (
     <div className="space-y-6">
       <div className="space-y-1.5">
         <h3 className="font-bold text-2xl text-[#1E293B]" style={{ fontFamily: "Fredoka, Prompt, sans-serif" }}>
-          <i className="fa-solid fa-coins text-[#FF007F] mr-2"></i>
-          {haveTicket && ticketZone ? "งบนอกเหนือราคาบัตร" : "งบประมาณรวมทั้งทริป"}
+          <i className="fa-solid fa-coins text-[#FF007F] mr-2"></i> งบประมาณรวมทั้งทริป
         </h3>
         <p className="text-xs text-slate-500">
           {haveTicket && ticketZone
@@ -35,18 +33,47 @@ export default function Step1Budget({ state, onChange, haveTicket, ticketZone }:
       </div>
 
       <div className="space-y-4">
-        {/* Main budget display */}
+        {/* Total hero */}
         <div className="p-4 rounded-2xl bg-[#FFF0F6]/40 border border-[#FF007F]/10 text-center">
           <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">
-            {haveTicket && ticketZone ? "งบนอกเหนือค่าบัตร" : "งบรวมของฉัน"}
+            งบรวมทั้งทริป
           </span>
           <span className="font-black text-4xl text-[#FF007F]" style={{ fontFamily: "Fredoka, Prompt, sans-serif" }}>
-            ฿{(haveTicket && ticketZone ? nonTicketBudget : state.budget).toLocaleString()}
+            ฿{totalBudget.toLocaleString()}
           </span>
         </div>
 
+        {/* Two boxes for have-ticket mode */}
+        {haveTicket && ticketZone && (
+          <div className="grid grid-cols-2 gap-3">
+            {/* Ticket price - fixed */}
+            <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">ราคาบัตร</span>
+                <i className="fa-solid fa-lock text-[10px] text-slate-300"></i>
+              </div>
+              <p className="text-[10px] text-slate-400 leading-snug">{zoneName}</p>
+              <p className="font-black text-lg text-slate-700" style={{ fontFamily: "Fredoka, Prompt, sans-serif" }}>
+                ฿{ticketPrice.toLocaleString()}
+              </p>
+            </div>
+
+            {/* Non-ticket budget - adjustable */}
+            <div className="rounded-2xl border border-[#4F46E5]/20 bg-[#F5F3FF]/40 p-4 space-y-1">
+              <span className="text-[9px] font-bold text-[#4F46E5] uppercase tracking-widest block">งบนอกเหนือค่าบัตร</span>
+              <p className="text-[10px] text-slate-400 leading-snug">ที่พัก · เดินทาง · กิน · ของที่ระลึก</p>
+              <p className="font-black text-lg text-[#4F46E5]" style={{ fontFamily: "Fredoka, Prompt, sans-serif" }}>
+                ฿{nonTicketBudget.toLocaleString()}
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Slider */}
         <div className="space-y-2">
+          <p className="text-[10px] font-bold text-slate-500">
+            {haveTicket && ticketZone ? "ปรับงบนอกเหนือค่าบัตร" : "ปรับงบรวม"}
+          </p>
           <input
             type="range"
             min="0"
@@ -84,33 +111,6 @@ export default function Step1Budget({ state, onChange, haveTicket, ticketZone }:
             </button>
           ))}
         </div>
-
-        {/* Breakdown for have-ticket mode */}
-        {haveTicket && ticketZone && (
-          <div className="rounded-2xl border border-slate-100 overflow-hidden divide-y divide-slate-100">
-            <div className="flex justify-between items-center px-4 py-3 bg-white">
-              <span className="text-xs text-slate-500 flex items-center gap-1.5">
-                <i className="fa-solid fa-wallet text-[#4F46E5]"></i>
-                งบนอกเหนือค่าบัตร
-              </span>
-              <span className="text-xs font-bold text-slate-700">฿{nonTicketBudget.toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between items-center px-4 py-3 bg-slate-50">
-              <span className="text-xs text-slate-500 flex items-center gap-1.5">
-                <i className="fa-solid fa-ticket text-[#FF007F]"></i>
-                ราคาบัตร ({ticketZone.zone.split("(")[0].trim()})
-              </span>
-              <span className="text-xs font-bold text-slate-700">฿{ticketPrice.toLocaleString()}</span>
-            </div>
-            <div className="flex justify-between items-center px-4 py-3 bg-[#FFF0F6]/30">
-              <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                <i className="fa-solid fa-circle-check text-[#FF007F]"></i>
-                รวมงบทั้งทริป
-              </span>
-              <span className="text-sm font-black text-[#FF007F]">฿{totalBudget.toLocaleString()}</span>
-            </div>
-          </div>
-        )}
 
         {!haveTicket && (
           <div className="p-3 bg-blue-50/60 rounded-xl border border-blue-100 text-[11px] text-slate-600">
