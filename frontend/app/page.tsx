@@ -53,6 +53,7 @@ export default function Page() {
       const result = await fetchRecommendation({
         concertId: selectedConcert.id,
         budget: state.budget,
+        preselectedZone: state.preselectedZone,
         hotelPriorities: state.hotelPriorities,
         needHotel: state.needHotel,
         hotelNights: state.hotelNights,

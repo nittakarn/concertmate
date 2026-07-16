@@ -59,6 +59,7 @@ export interface Concert {
 export interface RecommendRequest {
   concertId: string;
   budget: number;
+  preselectedZone?: string;
   hotelPriorities: string[];
   needHotel: boolean;
   hotelNights: number;
@@ -73,6 +74,7 @@ export interface RankedHotel {
   hotel: Hotel;
   score: number;
   reasoning: string;
+  withinBudget: boolean;
 }
 
 export interface RecommendResponse {

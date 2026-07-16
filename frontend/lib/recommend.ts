@@ -7,7 +7,7 @@ const HOTEL_PRIORITY_LABELS: Record<string, string> = {
   rated: "รีวิวดีที่สุด",
 };
 
-function hotelReasoning(hotel: Hotel, priorities: string[]): string {
+function hotelReasoning(hotel: Hotel, priorities: string[], withinBudget: boolean): string {
   const frags: string[] = [];
   if (priorities.includes("closest")) frags.push(`อยู่ห่างจากฮอลล์แค่ ${hotel.dist}`);
   if (priorities.includes("value")) frags.push(`ราคาย่อมเยาที่ ฿${hotel.price.toLocaleString()}/คืน`);
@@ -16,7 +16,8 @@ function hotelReasoning(hotel: Hotel, priorities: string[]): string {
     .filter((p) => HOTEL_PRIORITY_LABELS[p])
     .map((p) => HOTEL_PRIORITY_LABELS[p])
     .join(" + ");
-  return `เพราะคุณเลือกเน้น "${labels}" — ${hotel.name} ตรงเงื่อนไขคุณ เพราะ${frags.join(" และ")} (${hotel.reason})`;
+  const budgetNote = withinBudget ? "" : " (ราคาเกินงบที่เหลือ)";
+  return `เพราะคุณเลือกเน้น "${labels}" — ${hotel.name} ตรงเงื่อนไขคุณ เพราะ${frags.join(" และ")} (${hotel.reason})${budgetNote}`;
 }
 
 function hotelScore(hotel: Hotel, priorities: string[]): number {
@@ -40,14 +41,31 @@ export function getRecommendation(req: RecommendRequest): RecommendResponse {
   if (!concert) throw new Error("Concert not found");
 
   const priorities = req.hotelPriorities.length > 0 ? req.hotelPriorities : ["closest"];
-  const sorted = [...concert.hotels].sort((a, b) => hotelScore(b, priorities) - hotelScore(a, priorities));
 
-  const rankedHotels: RankedHotel[] = sorted.map((hotel, i) => ({
-    rank: i + 1,
-    hotel,
-    score: hotelScore(hotel, priorities),
-    reasoning: hotelReasoning(hotel, priorities),
-  }));
+  // คำนวณงบที่เหลือสำหรับโรงแรม
+  const ticketPrice = concert.prices.find((p) => p.zone === req.preselectedZone)?.price ?? 0;
+  const otherCosts = req.transportCost + req.merchCost + req.foodCost + req.otherCost;
+  const hotelBudgetTotal = req.budget - ticketPrice - otherCosts;
+  const hotelBudgetPerNight = req.hotelNights > 0 ? hotelBudgetTotal / req.hotelNights : hotelBudgetTotal;
+
+  // sort: โรงแรมในงบก่อน แล้วค่อย rank ตาม score
+  const sorted = [...concert.hotels].sort((a, b) => {
+    const aInBudget = a.price <= hotelBudgetPerNight;
+    const bInBudget = b.price <= hotelBudgetPerNight;
+    if (aInBudget !== bInBudget) return aInBudget ? -1 : 1;
+    return hotelScore(b, priorities) - hotelScore(a, priorities);
+  });
+
+  const rankedHotels: RankedHotel[] = sorted.map((hotel, i) => {
+    const withinBudget = hotel.price <= hotelBudgetPerNight;
+    return {
+      rank: i + 1,
+      hotel,
+      score: hotelScore(hotel, priorities),
+      reasoning: hotelReasoning(hotel, priorities, withinBudget),
+      withinBudget,
+    };
+  });
 
   return { rankedHotels };
 }

@@ -84,12 +84,17 @@ export default function HotelSection({ rankedHotels, hotelNights, selectedHotelI
                 </span>
               </div>
 
-              {/* Selected badge top-right */}
-              {isSelected && (
-                <span className="absolute top-4 right-4 px-3 py-1.5 rounded-full text-[10px] font-extrabold bg-white text-[#4F46E5] shadow">
-                  ✓ เลือกแล้ว
+              {/* Budget / selected badge top-right */}
+              <div className="absolute top-4 right-4 flex flex-col items-end gap-1.5">
+                {isSelected && (
+                  <span className="px-3 py-1.5 rounded-full text-[10px] font-extrabold bg-white text-[#4F46E5] shadow">
+                    ✓ เลือกแล้ว
+                  </span>
+                )}
+                <span className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold shadow ${rh.withinBudget ? "bg-emerald-500 text-white" : "bg-rose-500 text-white"}`}>
+                  {rh.withinBudget ? "ในงบ ✓" : "เกินงบ"}
                 </span>
-              )}
+              </div>
 
               {/* Hotel name + info overlay on image bottom */}
               <div className="absolute bottom-0 left-0 right-0 px-5 pb-4">
