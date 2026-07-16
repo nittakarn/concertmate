@@ -98,10 +98,10 @@ export default function BudgetSection({
       >
         <span className="flex items-center gap-2">
           <i className={`fa-solid ${isOver ? "fa-circle-exclamation animate-pulse" : "fa-circle-check"}`} />
-          {isOver ? "เกินงบแล้วนะ!" : "อยู่ในงบ ✓"}
+          งบคงเหลือ
         </span>
         <span className="font-black text-base">
-          {isOver ? "+" : ""}฿{Math.abs(remaining).toLocaleString()}
+          {isOver ? "-" : ""}฿{Math.abs(remaining).toLocaleString()}
         </span>
       </div>
 

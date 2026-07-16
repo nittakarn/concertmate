@@ -35,7 +35,7 @@ export default function Step1Budget({ state, onChange, haveTicket, ticketZone }:
       <div className="space-y-4">
         {/* Total hero */}
         <div className="p-4 rounded-2xl bg-[#FFF0F6]/40 border border-[#FF007F]/10 text-center">
-          <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">
+          <span className="text-sm font-bold text-slate-500 block">
             งบรวมทั้งทริป
           </span>
           <span className="font-black text-4xl text-[#FF007F]" style={{ fontFamily: "Fredoka, Prompt, sans-serif" }}>
@@ -71,7 +71,7 @@ export default function Step1Budget({ state, onChange, haveTicket, ticketZone }:
 
         {/* Slider */}
         <div className="space-y-2">
-          <p className="text-[10px] font-bold text-slate-500">
+          <p className="text-sm font-bold text-slate-600">
             {haveTicket && ticketZone ? "ปรับงบนอกเหนือค่าบัตร" : "ปรับงบรวม"}
           </p>
           <input
