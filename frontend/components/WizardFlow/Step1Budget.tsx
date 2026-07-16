@@ -49,20 +49,20 @@ export default function Step1Budget({ state, onChange, haveTicket, ticketZone }:
             {/* Ticket price - fixed */}
             <div className="rounded-2xl border border-slate-100 bg-slate-50 p-4 space-y-1">
               <div className="flex items-center justify-between">
-                <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">ราคาบัตร</span>
-                <i className="fa-solid fa-lock text-[10px] text-slate-300"></i>
+                <span className="text-xs font-bold text-slate-500">ราคาบัตร</span>
+                <i className="fa-solid fa-lock text-xs text-slate-300"></i>
               </div>
-              <p className="text-[10px] text-slate-400 leading-snug">{zoneName}</p>
-              <p className="font-black text-lg text-slate-700" style={{ fontFamily: "Fredoka, Prompt, sans-serif" }}>
+              <p className="text-[11px] text-slate-400 leading-snug">{zoneName}</p>
+              <p className="font-black text-2xl text-slate-700" style={{ fontFamily: "Fredoka, Prompt, sans-serif" }}>
                 ฿{ticketPrice.toLocaleString()}
               </p>
             </div>
 
             {/* Non-ticket budget - adjustable */}
             <div className="rounded-2xl border border-[#4F46E5]/20 bg-[#F5F3FF]/40 p-4 space-y-1">
-              <span className="text-[9px] font-bold text-[#4F46E5] uppercase tracking-widest block">งบนอกเหนือค่าบัตร</span>
-              <p className="text-[10px] text-slate-400 leading-snug">ที่พัก · เดินทาง · กิน · ของที่ระลึก</p>
-              <p className="font-black text-lg text-[#4F46E5]" style={{ fontFamily: "Fredoka, Prompt, sans-serif" }}>
+              <span className="text-xs font-bold text-[#4F46E5] block">งบนอกเหนือค่าบัตร</span>
+              <p className="text-[11px] text-slate-400 leading-snug">ที่พัก · เดินทาง · กิน · ของระลึก</p>
+              <p className="font-black text-2xl text-[#4F46E5]" style={{ fontFamily: "Fredoka, Prompt, sans-serif" }}>
                 ฿{nonTicketBudget.toLocaleString()}
               </p>
             </div>
