@@ -91,11 +91,18 @@ export default function TransitSection({ concert, ticketZone, wantMerch = false 
     arrivalDesc = wantMerch
       ? "ถ่ายรูปหน้างานก่อนคนเยอะ ซื้อ Merch แล้วใช้สิทธิ์ Early Entry เข้าโซนยืนก่อนบัตรทั่วไป"
       : "ถ่ายรูปหน้างานก่อนคนเยอะ แล้วใช้สิทธิ์ Early Entry เข้าโซนยืนก่อนบัตรทั่วไป จับตำแหน่งหน้าสเตจ";
+  } else if (isStanding && wantMerch) {
+    // ยืนทั่วไป + ซื้อของ — ต้องเผื่อเวลาซื้อของ + รันคิวจับตำแหน่งยืน
+    arrivalDeltaMins = 150;
+    arrivalTime = addMin(concert.doorTime, -150);
+    arrivalDesc = "ถ่ายรูปหน้างานก่อนคนเยอะ ซื้อ Merch ให้เสร็จก่อน แล้วรีบเข้าคิวจับตำแหน่งยืนใกล้เวที";
   } else if (wantMerch) {
+    // ที่นั่งทั่วไป + ซื้อของ
     arrivalDeltaMins = 120;
     arrivalTime = addMin(concert.doorTime, -120);
     arrivalDesc = "เผื่อ 30 นาทีถ่ายรูปหน้างานก่อนคนเยอะ แล้วทันบูธ Merch เปิดพอดี";
   } else if (isStanding) {
+    // ยืนทั่วไป ไม่ซื้อของ
     arrivalDeltaMins = 120;
     arrivalTime = standingArrTime;
     arrivalDesc = "ถ่ายรูปหน้างานก่อนคนเยอะ แล้วจับตำแหน่งยืนใกล้เวทีได้เลย";
@@ -116,6 +123,8 @@ export default function TransitSection({ concert, ticketZone, wantMerch = false 
       ? wantMerch ? ["VIP Seated", "Merch"] : ["VIP Seated"]
     : hasEarlyEntry
       ? wantMerch ? ["Standing", "Early Entry", "Merch"] : ["Standing", "Early Entry"]
+    : isStanding && wantMerch
+      ? ["Standing", "Merch"]
     : wantMerch
       ? ["Merch"]
     : isStanding
