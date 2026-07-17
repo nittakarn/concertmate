@@ -27,7 +27,7 @@ function hotelScore(hotel: Hotel, priorities: string[]): number {
     scores.push(Math.max(0, (10.0 - distVal) / 10.0) * 10);
   }
   if (priorities.includes("value")) {
-    scores.push(Math.max(0, (5000.0 - hotel.price) / 4000.0) * 10);
+    scores.push(Math.min(10, Math.max(0, (5000.0 - hotel.price) / 4000.0) * 10));
   }
   if (priorities.includes("rated")) {
     scores.push(((hotel.rating - 1.0) / 4.0) * 10);

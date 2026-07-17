@@ -48,7 +48,7 @@ def recommend(req: RecommendRequest):
                 dist_val = 5.0
             scores["closest"] = max(0.0, (10.0 - dist_val) / 10.0) * 10
         if "value" in priorities:
-            scores["value"] = max(0.0, (5000.0 - h["price"]) / 4000.0) * 10
+            scores["value"] = min(10.0, max(0.0, (5000.0 - h["price"]) / 4000.0) * 10)
         if "rated" in priorities:
             scores["rated"] = ((h["rating"] - 1.0) / 4.0) * 10
         if not scores:
