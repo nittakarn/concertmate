@@ -48,13 +48,15 @@ export function getRecommendation(req: RecommendRequest): RecommendResponse {
   const hotelBudgetTotal = req.budget - ticketPrice - otherCosts;
   const hotelBudgetPerNight = req.hotelNights > 0 ? hotelBudgetTotal / req.hotelNights : hotelBudgetTotal;
 
-  // sort: โรงแรมในงบก่อน แล้วค่อย rank ตาม score
-  const sorted = [...concert.hotels].sort((a, b) => {
-    const aInBudget = a.price <= hotelBudgetPerNight;
-    const bInBudget = b.price <= hotelBudgetPerNight;
-    if (aInBudget !== bInBudget) return aInBudget ? -1 : 1;
-    return hotelScore(b, priorities) - hotelScore(a, priorities);
-  });
+  const BUDGET_BONUS = 1.5;
+
+  const totalScore = (hotel: Hotel) => {
+    const base = hotelScore(hotel, priorities);
+    const bonus = hotel.price <= hotelBudgetPerNight ? BUDGET_BONUS : 0;
+    return base + bonus;
+  };
+
+  const sorted = [...concert.hotels].sort((a, b) => totalScore(b) - totalScore(a));
 
   const rankedHotels: RankedHotel[] = sorted.map((hotel, i) => {
     const withinBudget = hotel.price <= hotelBudgetPerNight;

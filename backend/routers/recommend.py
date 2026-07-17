@@ -55,12 +55,14 @@ def recommend(req: RecommendRequest):
             return 0.0
         return round(sum(scores.values()) / len(scores), 1)
 
-    # sort: โรงแรมในงบก่อน แล้วค่อย rank ตาม score
-    def sort_key(h: dict):
-        within = h["price"] <= hotel_budget_per_night
-        return (0 if within else 1, -hotel_score(h))
+    BUDGET_BONUS = 1.5
 
-    sorted_hotels = sorted(hotels, key=sort_key)
+    def total_score(h: dict) -> float:
+        base = hotel_score(h)
+        bonus = BUDGET_BONUS if h["price"] <= hotel_budget_per_night else 0
+        return base + bonus
+
+    sorted_hotels = sorted(hotels, key=total_score, reverse=True)
 
     ranked_hotels = [
         RankedHotel(
