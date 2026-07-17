@@ -55,7 +55,7 @@ CONCERTS_DATA = {
             {"zone": "โซน SF-SJ (Level 1 กลาง)", "price": 5000, "type": "Seated", "color": "#A3E635", "perks": "ที่นั่งโซน S ด้านหน้า Level 1 มุมมองครอบคลุมทั้งเวที"},
             {"zone": "โซน SB-SE, SK-SN (Level 2)", "price": 4500, "type": "Seated", "color": "#14B8A6", "perks": "ที่นั่งโซน S Level 2 ฝั่งซ้ายและขวา มุมสูงเห็นบรรยากาศทะเลไฟ"},
             {"zone": "โซน C-G, O-R (อัฒจันทร์)", "price": 3500, "type": "Seated", "color": "#818CF8", "perks": "ที่นั่งอัฒจันทร์ฝั่งข้าง เห็นทั้งเวทีและ Formation ของวง"},
-            {"zone": "โซน B, H-N, S, T (Level 3 วงนอก)", "price": 2500, "type": "Seated", "color": "#0F766E", "perks": "ราคาประหยัดที่สุด เห็นภาพรวมทั้งฮอลล์ บรรยากาศทะเลไฟสวยมาก"},
+            {"zone": "โซน B, H-N, S, T (Level 3 วงนอก)", "price": 2500, "type": "Seated", "color": "#4338CA", "perks": "ราคาประหยัดที่สุด เห็นภาพรวมทั้งฮอลล์ บรรยากาศทะเลไฟสวยมาก"},
         ],
         "hotels": [
             {"id": "xg1", "name": "Novotel Bangkok IMPACT", "dist": "0.2 กม. (สกายวอล์กตรงเข้าฮอลล์)", "rating": 4.5, "price": 3500, "mapQuery": "Novotel Bangkok Impact", "reason": "เชื่อมสกายวอล์กตรงเข้าประตูฮอลล์ เลี่ยงฝนกรกฎาคมและรถติดได้เต็มที่ ปลอดภัยที่สุดสำหรับขากลับดึก", "image": "https://www.ahstatic.com/photos/8059_ho_00_p_1024x768.jpg", "bookingUrl": "https://www.agoda.com/novotel-bangkok-impact-hotel/hotel/bangkok-th.html"},
