@@ -11,7 +11,7 @@ HOTEL_PRIORITY_LABELS = {
 }
 
 
-def _hotel_reasoning(hotel: dict, priorities: list[str]) -> str:
+def _hotel_reasoning(hotel: dict, priorities: list[str], within_budget: bool) -> str:
     frags = []
     if "closest" in priorities:
         frags.append(f"อยู่ห่างจากฮอลล์แค่ {hotel['dist']}")
@@ -20,7 +20,8 @@ def _hotel_reasoning(hotel: dict, priorities: list[str]) -> str:
     if "rated" in priorities:
         frags.append(f"คะแนนรีวิวสูงถึง {hotel['rating']}/5")
     labels = " + ".join(HOTEL_PRIORITY_LABELS[p] for p in priorities if p in HOTEL_PRIORITY_LABELS)
-    return f'เพราะคุณเลือกเน้น "{labels}" — {hotel["name"]} ตรงเงื่อนไขคุณ เพราะ{" และ".join(frags)} ({hotel["reason"]})'
+    budget_note = "" if within_budget else " (ราคาเกินงบที่เหลือ)"
+    return f'เพราะคุณเลือกเน้น "{labels}" — {hotel["name"]} ตรงเงื่อนไขคุณ เพราะ{" และ".join(frags)} ({hotel["reason"]}){budget_note}'
 
 
 @router.post("", response_model=RecommendResponse)
@@ -30,6 +31,13 @@ def recommend(req: RecommendRequest):
 
     hotels = CONCERTS_DATA[req.concertId]["hotels"]
     priorities = req.hotelPriorities if req.hotelPriorities else ["closest"]
+
+    # คำนวณงบที่เหลือสำหรับโรงแรม
+    concert_prices = CONCERTS_DATA[req.concertId]["prices"]
+    ticket_price = next((p["price"] for p in concert_prices if p["zone"] == req.preselectedZone), 0)
+    other_costs = req.transportCost + req.merchCost + req.foodCost + req.otherCost
+    hotel_budget_total = req.budget - ticket_price - other_costs
+    hotel_budget_per_night = hotel_budget_total / max(req.hotelNights, 1)
 
     def hotel_score(h: dict) -> float:
         scores: dict[str, float] = {}
@@ -47,14 +55,22 @@ def recommend(req: RecommendRequest):
             return 0.0
         return round(sum(scores.values()) / len(scores), 1)
 
+    # sort: โรงแรมในงบก่อน แล้วค่อย rank ตาม score
+    def sort_key(h: dict):
+        within = h["price"] <= hotel_budget_per_night
+        return (0 if within else 1, -hotel_score(h))
+
+    sorted_hotels = sorted(hotels, key=sort_key)
+
     ranked_hotels = [
         RankedHotel(
             rank=i + 1,
             hotel=Hotel(**h),
             score=hotel_score(h),
-            reasoning=_hotel_reasoning(h, priorities),
+            reasoning=_hotel_reasoning(h, priorities, h["price"] <= hotel_budget_per_night),
+            withinBudget=h["price"] <= hotel_budget_per_night,
         )
-        for i, h in enumerate(sorted(hotels, key=hotel_score, reverse=True))
+        for i, h in enumerate(sorted_hotels)
     ]
 
     return RecommendResponse(rankedHotels=ranked_hotels)

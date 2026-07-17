@@ -63,6 +63,7 @@ class Concert(BaseModel):
 class RecommendRequest(BaseModel):
     concertId: str
     budget: float
+    preselectedZone: Optional[str] = None
     hotelPriorities: list[str]
     needHotel: bool
     hotelNights: int
@@ -77,6 +78,7 @@ class RankedHotel(BaseModel):
     hotel: Hotel
     score: float
     reasoning: str
+    withinBudget: bool
 
 
 class RecommendResponse(BaseModel):
