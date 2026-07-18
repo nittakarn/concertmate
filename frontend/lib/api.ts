@@ -1,19 +1,12 @@
-import type { Concert, RecommendRequest, RecommendResponse } from "./types";
-
-const API = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+import type { RecommendRequest, RecommendResponse } from "./types";
+import type { Concert } from "./types";
+import { CONCERTS_DATA } from "./concerts";
+import { getRecommendation } from "./recommend";
 
 export async function fetchConcerts(): Promise<Concert[]> {
-  const res = await fetch(`${API}/api/concerts`);
-  if (!res.ok) throw new Error("Failed to fetch concerts");
-  return res.json();
+  return CONCERTS_DATA;
 }
 
 export async function fetchRecommendation(req: RecommendRequest): Promise<RecommendResponse> {
-  const res = await fetch(`${API}/api/recommend`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(req),
-  });
-  if (!res.ok) throw new Error("Failed to fetch recommendation");
-  return res.json();
+  return getRecommendation(req);
 }
